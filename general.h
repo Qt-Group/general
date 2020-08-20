@@ -76,20 +76,15 @@ static inline void debug_msg(uint8_t debug_region, uint32_t counter,
 #ifdef DEBUG_MODE	
 static inline void sendTxBuffer(uint8_t cnt) {
 	static unsigned char last_tx_buff_counter = 0;
-	if (cnt > 0) { //only send cnt number of messages
+	while (cnt-- > 0) {
 		if (last_tx_buff_counter != tx_buff_counter) {
 			HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
 					strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
 			rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
 		}
-	} else { //send all
-		while (last_tx_buff_counter != tx_buff_counter) {
-			HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
-					strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
-			rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
-		}
+		else
+			return;
 	}
-
 }
 #endif
 
