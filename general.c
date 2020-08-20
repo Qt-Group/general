@@ -3,7 +3,7 @@
 #define TIMER_CLOCK_FREQUENCY_HZ	170000000
 
 #ifdef DEBUG_MODE
-uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter = 0;
+uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter = 0, usart_has_initialized = 0;
 #endif
 
 void timerSetFreq(TIM_HandleTypeDef *htim, uint32_t frq_Hz) {
