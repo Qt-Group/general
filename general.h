@@ -19,8 +19,8 @@ extern "C" {
 #include <stdio.h>
 
 #ifdef DEBUG_MODE
-#define  TX_BUF_COL     50  //max messages
-#define  TX_BUF_ROW     100 //max row length
+#define  TX_BUF_COL     50  //max number of messages
+#define  TX_BUF_ROW     100 //max message size
 extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter;
 #endif
 
