@@ -27,7 +27,7 @@ extern "C" {
 #if (TX_BUF_ROW < 1 || TX_BUF_ROW > 254)
 #error "TX_BUF_ROW is out of range!"
 #endif	
-extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter;
+extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter, usart_has_initialized;
 #endif
 
 void timerSetFreq(TIM_HandleTypeDef *htim, uint32_t frq_Hz);
@@ -76,6 +76,8 @@ static inline void debug_msg(uint8_t debug_region, uint32_t counter,
 #ifdef DEBUG_MODE	
 static inline void sendTxBuffer(uint8_t cnt) {
 	static unsigned char last_tx_buff_counter = 0;
+	if(!usart_has_initialized)
+		return;
 	while (cnt-- > 0) {
 		if (last_tx_buff_counter != tx_buff_counter) {
 			HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
