@@ -21,6 +21,12 @@ extern "C" {
 #ifdef DEBUG_MODE
 #define  TX_BUF_COL     50  //max number of messages
 #define  TX_BUF_ROW     100 //max length of each message
+#if (TX_BUF_COL < 1 || TX_BUF_COL > 254)
+#error "TX_BUF_COL is out of range!"
+#endif
+#if (TX_BUF_ROW < 1 || TX_BUF_ROW > 254)
+#error "TX_BUF_ROW is out of range!"
+#endif	
 extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter;
 #endif
 
