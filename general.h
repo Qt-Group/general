@@ -27,7 +27,7 @@ extern "C" {
 #if (TX_BUF_ROW < 1 || TX_BUF_ROW > 254)
 #error "TX_BUF_ROW is out of range!"
 #endif	
-extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter, usart_has_initialized;
+extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter;
 #endif
 
 #ifdef DEBUG_MODE
