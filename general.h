@@ -30,20 +30,19 @@ static inline void blinkLED(void) {
 	static uint8_t one_hz = 0;
 	if (++one_hz >= 10) { // 1 Hz
 		one_hz = 0;
-#ifdef DEBUG_MODE
 		HAL_GPIO_TogglePin(StatusLED_GPIO_Port, StatusLED_Pin);
-#endif
 	}
 }
 
 #ifdef DEBUG_MODE
-
 static inline void rotateVal(uint8_t *val, uint8_t min, uint8_t max) {
 	(*val)++;
 	if (*val > max)
 		*val = min;
 }
-
+#endif
+	
+#ifdef DEBUG_MODE	
 static inline void debug_msg(uint8_t debug_region, uint32_t counter,
 		char const *format, ...) {
 	static uint32_t debug_msg_counter = 0;
@@ -64,7 +63,11 @@ static inline void debug_msg(uint8_t debug_region, uint32_t counter,
 		va_end(args);
 	}
 }
+#else
+#define debug_msg(...)
+#endif
 
+#ifdef DEBUG_MODE	
 static inline void sendTxBuffer(uint8_t cnt) {
 	static unsigned char last_tx_buff_counter = 0;
 	if (cnt > 0) { //only send cnt number of messages
@@ -82,7 +85,6 @@ static inline void sendTxBuffer(uint8_t cnt) {
 	}
 
 }
-
 #endif
 
 #ifdef __cplusplus
