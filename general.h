@@ -30,6 +30,11 @@ extern "C" {
 extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter, usart_has_initialized;
 #endif
 
+#ifdef DEBUG_MODE
+void debug_msg(uint8_t debug, uint8_t time, uint32_t counter,
+		char const *format, ...) ;
+#endif	
+	
 void timerSetFreq(TIM_HandleTypeDef *htim, uint32_t frq_Hz);
 
 static inline void blinkLED(void) {
@@ -48,44 +53,14 @@ static inline void rotateVal(uint8_t *val, uint8_t min, uint8_t max) {
 }
 #endif
 	
-#ifdef DEBUG_MODE	
-static inline void debug_msg(uint8_t debug_region, uint32_t counter,
-		char const *format, ...) {
-	static uint32_t debug_msg_counter = 0;
-	if (counter > 0) {
-		debug_msg_counter++;
-		if (debug_msg_counter > counter)
-			return;
-	}
-	va_list args;
-	if (debug_region) {
-		va_start(args, format);
-		if (strlen(format) < TX_BUF_ROW)
-			vsprintf((char*) tX_buff[tx_buff_counter], format, args);
-		else
-			vsprintf((char*) tX_buff[tx_buff_counter],
-					">=TX_BUF_ROW strlen error", args);
-		rotateVal(&tx_buff_counter, 0, TX_BUF_COL - 1);
-		va_end(args);
-	}
-}
-#else
-#define debug_msg(...)
-#endif
-
-#ifdef DEBUG_MODE	
-static inline void sendTxBuffer(uint8_t cnt) {
+#ifdef DEBUG_MODE
+static inline void sendTxBuffer(void) {
 	static unsigned char last_tx_buff_counter = 0;
-	if(!usart_has_initialized)
-		return;
-	while (cnt-- > 0) {
-		if (last_tx_buff_counter != tx_buff_counter) {
-			HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
-					strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
-			rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
-		}
-		else
-			return;
+
+	while (last_tx_buff_counter != tx_buff_counter) {
+		HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
+				strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
+		rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
 	}
 }
 #endif
