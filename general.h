@@ -36,6 +36,8 @@ extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter;
 #ifdef DEBUG_MODE
 void debug_msg(uint8_t debug, uint8_t time, uint32_t counter,
 		char const *format, ...) ;
+#else
+#define debug_msg(...)
 #endif
 
 void testButton(GPIO_TypeDef *port, uint16_t pin, uint8_t *glitch_protection,
