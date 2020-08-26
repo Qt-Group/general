@@ -18,6 +18,8 @@ extern "C" {
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdbool.h>
+	
+#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))	
 
 #ifdef DEBUG_MODE
 #define  TX_BUF_COL     50  //max number of messages
@@ -45,6 +47,15 @@ void testButton(GPIO_TypeDef *port, uint16_t pin, uint8_t *glitch_protection,
 #define setPinHighImpedance(port, pin)		setPinAsInput(port, pin)
 #define setPinHigh(port, pin)				HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
 #define setPinLow(port, pin)				HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET);
+	
+static inline uint8_t compareAndSetIfChange(uint16_t * last, uint16_t current, uint16_t hystersis)
+{
+  if((*last > current+hystersis)||(*last +hystersis < current)){
+    *last  = current;  
+    return 1;
+  }
+  return 0;  
+}	
 
 static inline uint8_t readDigitalPin(GPIO_TypeDef *port, uint16_t pin)
 {
@@ -114,6 +125,25 @@ static inline uint8_t isTimeElapsed(uint32_t *ms, uint32_t update_rate) {
 	}
 	return 0;
 }
+	
+static inline void incTillLimit(uint8_t * val, uint8_t limit)
+{
+  (*val)++;    
+  if(*val > limit)
+    *val = limit;    
+}
+
+static inline void decTillLimit(uint8_t * val, uint8_t limit)
+{
+  (*val)--;   
+  if(limit==0){
+    if(*val > 254)
+      *val = 0;      
+  }else{
+    if(*val < limit)
+      *val = limit;     
+  }  
+}	
 
 #ifdef __cplusplus
 }
