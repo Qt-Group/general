@@ -30,7 +30,7 @@ extern "C" {
 #if (TX_BUF_ROW < 1 || TX_BUF_ROW > 254)
 #error "TX_BUF_ROW is out of range!"
 #endif
-extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter;
+extern uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter, sendTxBufferMutex ;
 #endif
 
 #ifdef DEBUG_MODE
@@ -89,6 +89,8 @@ static inline void rotateVal(uint8_t *val, uint8_t min, uint8_t max) {
 
 #ifdef DEBUG_MODE
 static inline void sendTxBuffer(void) {
+	if(sendTxBufferMutex != 0) return;
+  	sendTxBufferMutex = 1;
 	static unsigned char last_tx_buff_counter = 0;
 
 	while (last_tx_buff_counter != tx_buff_counter) {
@@ -96,6 +98,7 @@ static inline void sendTxBuffer(void) {
 				strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
 		rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
 	}
+	sendTxBufferMutex = 0;
 }
 #endif
 
