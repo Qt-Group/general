@@ -123,13 +123,14 @@ static inline void setPinAsOutput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin,
 	HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
 }
 
-static inline uint8_t isTimeElapsed(uint32_t *ms, uint32_t update_rate) {
-	uint32_t now = HAL_GetTick();
-	if ((now - *ms > update_rate) || (*ms > now)) {
-		*ms = now;
-		return 1;
-	}
-	return 0;
+static inline uint8_t isTimeElapsed(uint32_t * tick, uint32_t update_rate_ms)
+{
+  uint32_t now = HAL_GetTick();
+  if((now - *tick > update_rate_ms) || (*tick > now)){
+    *tick = now;  
+    return 1;
+  }
+  return 0;
 }
 	
 static inline void incTillLimit(uint8_t * val, uint8_t limit)
