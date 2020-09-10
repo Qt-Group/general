@@ -35,6 +35,17 @@ void debug_msg(uint8_t debug, uint8_t time, uint32_t counter,
 #define debug_msg(...)
 #endif
 
+void myDelay(uint32_t time)
+{
+  uint32_t t = HAL_GetTick();
+  while(!isTimeElapsed(&t,time)){
+#ifdef DEBUG_MODE	  
+    sendTxBuffer(); 
+#endif	  
+    HAL_Delay(1);
+  }
+}
+
 void testButton(GPIO_TypeDef *port, uint16_t pin, uint8_t *glitch_protection,
 		uint8_t *pressed, uint8_t *last_pressed, uint8_t *just_pressed) {
 	if (HAL_GPIO_ReadPin(port, pin) == GPIO_PIN_RESET) {
