@@ -1,7 +1,7 @@
 #include "general.h"
 
 #ifdef DEBUG_MODE
-uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter = 0;
+uint8_t tX_buff[TX_BUF_COL][TX_BUF_ROW], tx_buff_counter = 0, sendTxBufferMutex = 0;
 #endif
 
 #ifdef DEBUG_MODE
