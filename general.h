@@ -89,16 +89,17 @@ static inline void rotateVal(uint8_t *val, uint8_t min, uint8_t max) {
 
 #ifdef DEBUG_MODE
 static inline void sendTxBuffer(void) {
-	if(sendTxBufferMutex != 0) return;
-  	sendTxBufferMutex = 1;
-	static unsigned char last_tx_buff_counter = 0;
+	if(sendTxBufferMutex == 0){
+		sendTxBufferMutex = 1;
+		static unsigned char last_tx_buff_counter = 0;
 
-	while (last_tx_buff_counter != tx_buff_counter) {
-		HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
-				strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
-		rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
+		while (last_tx_buff_counter != tx_buff_counter) {
+			HAL_UART_Transmit(&huart1, tX_buff[last_tx_buff_counter],
+					strlen((const char*) tX_buff[last_tx_buff_counter]), 1000);
+			rotateVal(&last_tx_buff_counter, 0, TX_BUF_COL - 1);
+		}
+		sendTxBufferMutex = 0;
 	}
-	sendTxBufferMutex = 0;
 }
 #endif
 
